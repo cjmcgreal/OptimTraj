@@ -35,7 +35,7 @@ function [aeroModel] = defineAeroModel(p,mac,aeroModelName)
 n_links = numel(p.areas) ; 
 
 for i=1:n_links % for all links
-    if exist('linkNames','var') % give names if defined, otherwise just assign default names
+    if exist('linkNames','var') % give names if defined, otherwise assign default names
         aeroModel.links(i).linkName = linkNames(i) ; 
     else
         aeroModel.links(i).linkNames = strcat('link_',num2str(i)) ; 

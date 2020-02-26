@@ -1,6 +1,7 @@
 function [out] = dynBodyFrame(omega, u, p)
 %
 % Computes combined (from all motors and props) forces and moments, and resultant acceleration, on a vehicle.
+% Includes a simple aerodynamic model. 
 % Does not include effects from gravity.
 %
 % INPUTS: 
