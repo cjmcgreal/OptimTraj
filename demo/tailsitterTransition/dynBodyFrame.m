@@ -1,11 +1,14 @@
-function [out] = dynBodyFrame(omega, u, p)
+function [out] = dynBodyFrame(z_body, u, p)
 %
 % Computes combined (from all motors and props) forces and moments, and resultant acceleration, on a vehicle.
 % Includes a simple aerodynamic model. 
 % Does not include effects from gravity.
 %
 % INPUTS: 
-%   omega = [3,n] = [rad/s] angular velocity. 
+%   z_body = [9,n] abbreviated state vector consists of [att; linVel;omega] where
+%       att = [pitch; roll; yaw][rad]
+%       linVel = [dx; dy; dz] [m/s] linear velocity
+%       omega = [dpitch; droll; dyaw][rad/s] angular velocity.  
 %   u = [N,n] (0-1) = control vector (i.e. "throttle") where:.  
 %                       All elements should be: 0 < u(i) < 1 
 %                       N = number of motors
@@ -41,8 +44,10 @@ function [out] = dynBodyFrame(omega, u, p)
 %
 % Written by Conrad McGreal 2020/01/27 
 
-%% pre
-
+%% Unpack input state
+att = z_body(1:3,:);    % aircraft attitude
+linVel = z_body(4:6,:); % linear world velocity
+omega = z_body(7:9,:);  % attitude rates
 
 
 %% Aero forces and moments
@@ -51,18 +56,18 @@ function [out] = dynBodyFrame(omega, u, p)
 % calculate aerodynamic forces & moments for all aero links (of p.aero)
 
 
-% forces and moments due to propulsion.
+%% Propulsive Wrenches
 [force_totals, moment_totals] = calculatePropulsionWrenches(u, p);
 
-%% Calculate accelerations (in body frame) based on forces and moments
+%% Rigid body dynamics
 % linear accelerations
 resultantForce = sum(force_totals,3) ; % add together, for each time step, total forces from all motors.
-linAccel = resultantForce./p.m ; % acceleration in each linear direction for every timestep
+linAccel = resultantForce./p.inertial.m ; % acceleration in each linear direction for every timestep
 
 % angular accelerations
 resultantMoment = sum(moment_totals,3) ; % add together, for each time step, total moment from all motors.
-bias = cross(omega,p.I*omega); % Eulerian bias acceleration term
-angAccel = p.I\(resultantMoment-bias) ; % solve Euler's equation for ang eccleration
+bias = cross(omega,p.inertial.I*omega); % Eulerian bias acceleration term
+angAccel = p.inertial.I\(resultantMoment-bias) ; % solve Euler's equation for ang eccleration
 
 % Prepare output
 out = [linAccel ; angAccel] ; 

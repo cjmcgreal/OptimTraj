@@ -9,7 +9,7 @@ function [forces, moments] = calculatePropulsionWrenches(u, p)
 %                       n_time = number of time steps
 %   p = [struct] plant model struct with required fields:
 %       .propulsion = [struct][n x 1] see definePropulsionModel.m
-%       .environt.rho = [scalar] air density [kg/m^3]
+%       .environ.rho = [scalar] air density [kg/m^3]
 %
 % Outputs:
 %   forces = [3 x n_time x n_motors]
@@ -32,12 +32,12 @@ for i=1:n_motors % actuators
         this_motor.C_t, this_motor.C_q) ; 
 
     % Compute prop wrenches in body frame
-    forces = this_motor.thrustAxis' * thrust  ; 
+    this_force = this_motor.thrustAxis' * thrust  ; 
 
     % Compute moments due to thrust 
     thrustArm = this_motor.thrustLocation - p.inertial.cg ;  % moment arm of motor to CG
-    thrustArms = repmat(thrustArm,size(forces,2),1) ; 
-    thrustMoments = cross(thrustArms,forces')  ; % moment, due to thrust, on vehicle
+    thrustArms = repmat(thrustArm,size(this_force,2),1) ; 
+    thrustMoments = cross(thrustArms,this_force')  ; % moment, due to thrust, on vehicle
 
     % Reverse torque direction if required.
     if this_motor.isSpinDirectionCCW == 1 
@@ -50,9 +50,10 @@ for i=1:n_motors % actuators
     torMoments = torque' * torqueAxis ; 
 
     % Add moments due to countertorque and moments due to thrust
-    moments = torMoments + thrustMoments ; 
-    moments = moments'; 
+    this_moment = torMoments + thrustMoments ; 
+    this_moment = this_moment'; 
+    
     % save
-    forces(:,:,i) = forces; 
-    moments(:,:,i) = moments; 
+    forces(:,:,i) = this_force; 
+    moments(:,:,i) = this_moment; 
 end

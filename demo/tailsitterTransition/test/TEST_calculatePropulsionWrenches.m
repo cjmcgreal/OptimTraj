@@ -15,7 +15,7 @@ p.inertial.cg = zeros(1,3) ;
 u = zeros(numel(p.propulsion),1) ; 
 
 % Call function
-[forces, moments] = calculatePropulsionWrenches(u, p);
+% [forces, moments] = calculatePropulsionWrenches(u, p);
 
 %% 'wide' input vector
 % control vector
