@@ -10,14 +10,12 @@ function [out] = dynBodyFrame(omega, u, p)
 %                       All elements should be: 0 < u(i) < 1 
 %                       N = number of motors
 %                       n = number of time steps
-%   rho = [scalar] (kg-m^3) air density
 %   p = parameter struct: 
-%       .g = [scalar] (m/s/s) acceleration due to gravity
-%       .rho = [scalar] (kg/m^3) air density
-%       .m = [scalar] (kg) total quadcopter mass 
-%       .I = [3x3] (kg-m^2) inertia matrix kg-m^2]
-%       .cg = [1,3] (m) center-of-gravity location in body coords.
-%       .propulsion(i) = [struct] propulsion parameter structwith fields
+%       .inertial = [struct] with fields:
+%           .m = [scalar] (kg) aircraft total mass 
+%           .cg = [1,3] (m) center-of-gravity location in body coords.
+%           .I = [3x3] (kg-m^2) inertia matrix kg-m^2]
+%       .propulsion(i) = [struct] propulsion parameter struct with fields
 %           .thrustAxis = [3x1] (unit vector) in body coordinates
 %           .thrustlocation = [3x1] (m) XYZ in body coordinates.
 %           .isSpinDirectionCCW = [bool] if true, propeller spin direction 
@@ -26,14 +24,22 @@ function [out] = dynBodyFrame(omega, u, p)
 %           .C_q = [scalar] () torque coefficient
 %           .maxRPM = [scalar] (RPM) maximum propeller RPM 
 %           .maxTorque = [scalar] (Nm) maximum propeller torque
-%           .d_prop = [scalar] (m) propeller diameter
+%           .d_prop = [scalar] (m) propeller diameter 
+%       .aero = [struct] with fields:
+%           .area = [m^2] aerodynamic reference area
+%           .mac = [m] mean aerodynamic chord
+%           .LUT = aerodynamic coefficient lookup table (see
+%                   readme_aeroModel for details)
+%       .environ = [struct] with fields:
+%           .g = [scalar] (m/s/s) acceleration due to gravity
+%           .rho = [scalar] (kg/m^3) air density
 %
 % OUTPUTS:
 %   out = [6, n] = [linearAccelerations; angularAccelerations] where
 %               linearAccelerations = [x_accel; y_accel; z_accel] (m/s/s) forces due to thrust
 %               angularAccelerations = [pitch_accel; roll_accel; yaw_accel] (rad/s/s) moment due to countertorque.
 %
-% Written by Conrad McGreal 2020/01/24  
+% Written by Conrad McGreal 2020/01/27 
 
 %% prep
 n_motors = numel(p.propulsion) ; 

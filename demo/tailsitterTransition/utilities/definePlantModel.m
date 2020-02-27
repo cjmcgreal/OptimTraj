@@ -24,7 +24,7 @@ qRP.isSpinDirectionCCW = [1; 0; 1; 0] ; % bool to reverse motor spin direction a
 [p.propulsion] = definePropulsionModel(qRP); 
 
 % aero data
-p.aero.area = 1 ; % square meters
+p.aero.area = 1 ; % [m^2]
 p.aero.mac = 0.25 ; % [m]
 load('aeroLUT_NACA0012','aeroLUT_NACA0012') ; 
 p.aero.LUT = aeroLUT_NACA0012 ; % name of .mat file that contains the aerodata
