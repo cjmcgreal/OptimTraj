@@ -6,7 +6,7 @@ function [out] = dynBodyFrame(omega, u, p)
 %
 % INPUTS: 
 %   omega = [3,n] = [rad/s] angular velocity. 
-%   u = [N,n] (0-1) = "throttle" vector where N is number of motors.  
+%   u = [N,n] (0-1) = control vector (i.e. "throttle") where:.  
 %                       All elements should be: 0 < u(i) < 1 
 %                       N = number of motors
 %                       n = number of time steps
@@ -41,56 +41,18 @@ function [out] = dynBodyFrame(omega, u, p)
 %
 % Written by Conrad McGreal 2020/01/27 
 
-%% prep
-n_motors = numel(p.propulsion) ; 
-n_time = size(u,2) ; 
-
-force_totals = zeros(3,n_time,n_motors) ; 
-moment_totals = zeros(3,n_time,n_motors) ; 
-
-%% body frame: forces and moments due to aero
-% Refactor into it's own function?
-
-% get alpha and V_inf
-
-% for all aero links (of p.aero) calculate forces.
+%% pre
 
 
-%% body frame: forces and moments due to propulsion.
-% Refactor into it's own function?
-for i=1:n_motors % actuators
-    this_motor = p.propulsion(i) ; 
-    this_RPM = u(i,:) * this_motor.maxRPM ; 
 
-    % Compute wrenches on prop (prop frame)
-    [thrust, torque] = computePropOpPoint(this_RPM, p.rho, this_motor.d_prop, ...
-        this_motor.C_t, this_motor.C_q) ; 
+%% Aero forces and moments
+% coordinate transforms to get alpha and V_inf
 
-    % Compute prop wrenches in body frame
-    forces = this_motor.thrustAxis' * thrust  ; 
+% calculate aerodynamic forces & moments for all aero links (of p.aero)
 
-    % Compute moments due to thrust 
-    thrustArm = this_motor.thrustLocation - p.cg ;  % moment arm of motor to CG
-    thrustArms = repmat(thrustArm,size(forces,2),1) ; 
-    thrustMoments = cross(thrustArms,forces')  ; % moment, due to thrust, on vehicle
 
-    % Reverse torque direction if required.
-    if this_motor.isSpinDirectionCCW == 1 
-       torqueAxis = -this_motor.thrustAxis ; 
-    else
-       torqueAxis = this_motor.thrustAxis ; 
-    end
-
-    % Compute moments due to countertorque. 
-    torMoments = torque' * torqueAxis ; 
-
-    % Add moments due to countertorque and moments due to thrust
-    moments = torMoments + thrustMoments ; 
-    
-    % save
-    force_totals(:,:,i) = forces ; 
-    moment_totals(:,:,i) = moments' ; 
-end
+% forces and moments due to propulsion.
+[force_totals, moment_totals] = calculatePropulsionWrenches(u, p);
 
 %% Calculate accelerations (in body frame) based on forces and moments
 % linear accelerations
