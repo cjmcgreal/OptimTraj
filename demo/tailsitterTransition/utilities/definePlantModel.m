@@ -4,6 +4,7 @@ function [p] = definePlantModel()
 % 
 % Factored out (from MAIN) for code readability. To make changes to plant model, make changes here directly.
 %
+% Body coordinate system is [belly, port, nose]
 
 p = struct() ; % init
 
@@ -18,7 +19,7 @@ qRP.d_prop = 0.305*ones(4,1) ; % propeller diameter (m)
 qRP.maxThrust = 25*ones(4,1) ; % thrust at 100% throttle (N)
 qRP.maxRPM = 10000*ones(4,1) ; % RPM at 100% throttle (RPM)
 qRP.maxTorque = ones(4,1) ;  % torque at 100% throttle (Nm)
-qRP.thrustLocations = [0.5 0 0; 0 0.5 0; -0.5 0 0; 0 -0.5 0]; % motor locations (each row one motor in coords: [port, nose, top] 
+qRP.thrustLocations = [0.5 0 0; 0 0.5 0; -0.5 0 0; 0 -0.5 0]; % motor locations (each row one motor in coords: [nose, port, tail, starboard] 
 qRP.thrustAxes = repmat([0 0 1],4,1) ; % thrust axes of each motor in coords port, nose, top.
 qRP.isSpinDirectionCCW = [1; 0; 1; 0] ; % bool to reverse motor spin direction around 'thrustAxes'.
 [p.propulsion] = definePropulsionModel(qRP); 
@@ -27,7 +28,7 @@ qRP.isSpinDirectionCCW = [1; 0; 1; 0] ; % bool to reverse motor spin direction a
 p.aero.area = 1 ; % [m^2]
 p.aero.mac = 0.25 ; % [m]
 p.aero.chord = [0 0 1] ; % direction unit vector of chord line in body frame (into oncoming air)
-p.aero.span = [1 0 0] ;  % direction unit vector of span
+p.aero.span = [0 1 0] ;  % direction unit vector of span
 load('aeroLUT_NACA0012','aeroLUT_NACA0012') ; 
 p.aero.LUT = aeroLUT_NACA0012 ; % name of .mat file that contains the aerodata
 

@@ -52,8 +52,8 @@ problem.func.pathObj = @(t,x,u)( sum(0.001*u.^2) ); %minimum jerk  -- regulariza
 % Select a solver:
 problem.options(1).method = 'trapezoid';
 problem.options(1).trapezoid.nGrid = 8;
-problem.options(2).method = 'trapezoid';
-problem.options(2).trapezoid.nGrid = 16;
+% problem.options(2).method = 'trapezoid';
+% problem.options(2).trapezoid.nGrid = 16;
 
 % Example syntax to run 'hermiteSimpson' solver.  Can take a while to run:  
 % problem.options(3).method = 'hermiteSimpson';
@@ -71,4 +71,4 @@ ddq = soln(end).grid.state(3,:);
 u = soln(end).grid.control ;
 
 % Plot the solution:
-% plotQuadRotor3d(soln)
+plotQuadRotor3d(soln)
