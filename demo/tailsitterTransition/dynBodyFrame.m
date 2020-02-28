@@ -50,22 +50,20 @@ linVel = z_body(4:6,:); % linear world velocity
 omega = z_body(7:9,:);  % attitude rates
 
 %% Aero forces and moments
-    
-% coordinate transforms to get alpha and V_inf
-
-% calculate aerodynamic forces & moments for all aero links (of p.aero)
-
+[aeroForces,aeroMoments] = calculateAeroWrenches(z_body, p.aero, p.environ.rho) ; 
 
 %% Propulsive Wrenches
-[force_totals, moment_totals] = calculatePropulsionWrenches(u, p);
+[propulsionForces, propulsionMoments] = calculatePropulsionWrenches(u, p);
+totalPropulsionForce = sum(propulsionForces,3) ; % add together, for each time step, total forces from all motors.
+totalPropulsionMoment = sum(propulsionMoments,3) ; % add together, for each time step, total moment from all motors.
 
 %% Rigid body dynamics
 % linear accelerations
-resultantForce = sum(force_totals,3) ; % add together, for each time step, total forces from all motors.
+resultantForce = totalPropulsionForce + aeroForces' ; 
 linAccel = resultantForce./p.inertial.m ; % acceleration in each linear direction for every timestep
 
 % angular accelerations
-resultantMoment = sum(moment_totals,3) ; % add together, for each time step, total moment from all motors.
+resultantMoment = totalPropulsionMoment + aeroMoments' ; 
 bias = cross(omega,p.inertial.I*omega); % Eulerian bias acceleration term
 angAccel = p.inertial.I\(resultantMoment-bias) ; % solve Euler's equation for ang eccleration
 

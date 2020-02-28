@@ -27,6 +27,7 @@ qRP.isSpinDirectionCCW = [1; 0; 1; 0] ; % bool to reverse motor spin direction a
 p.aero.area = 1 ; % [m^2]
 p.aero.mac = 0.25 ; % [m]
 p.aero.chord = [0 0 1] ; % direction unit vector of chord line in body frame (into oncoming air)
+p.aero.span = [1 0 0] ;  % direction unit vector of span
 load('aeroLUT_NACA0012','aeroLUT_NACA0012') ; 
 p.aero.LUT = aeroLUT_NACA0012 ; % name of .mat file that contains the aerodata
 

@@ -27,6 +27,8 @@ z_body = zeros(9,n_time) ;
 
 %% Test 3 - "wide" input vector.
 disp('Test 3 - ramp throttle ''wide'' ') 
+[p] = definePlantModel();
+n_motors = numel(p.propulsion); 
 n_time = 100 ;
 u = repmat(linspace(0,1,n_time),n_motors,1); 
 z_body = zeros(9,n_time) ; 

@@ -44,6 +44,11 @@ problem.guess.state = [initialState, finalState];
 problem.guess.control = ones(4,2);
 
 %% Solution
+% User-defined dynamics and objective functions
+problem.func.dynamics = @(t,x,u)( dynAircraft3d(x,u,p) );
+problem.func.bndObj = @(t0,x0,tF,xF)( tF - t0 ); % minimum time  -- primary objective
+problem.func.pathObj = @(t,x,u)( sum(0.001*u.^2) ); %minimum jerk  -- regularization
+
 % Select a solver:
 problem.options(1).method = 'trapezoid';
 problem.options(1).trapezoid.nGrid = 8;
@@ -66,4 +71,4 @@ ddq = soln(end).grid.state(3,:);
 u = soln(end).grid.control ;
 
 % Plot the solution:
-plotQuadRotor3d(soln)
+% plotQuadRotor3d(soln)
