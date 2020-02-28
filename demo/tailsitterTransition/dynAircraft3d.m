@@ -1,26 +1,33 @@
 function dz = dynAircraft3d(z, u, p)
 %
-% This function computes the dynamics of a 6 DOF quadcopter.
+% This function computes the dynamics of a 6 DOF quadcopter with planar aerodynamics.
 %
 % INPUTS:
 %   z = [12, n] = [X; dX] = [x, y, z, pitch, roll, yaw, dx, dy, dz, dpitch, droll, dyaw] = state matrix
 %   u = [4, n] = [u1; u2; u3; u4] = control matrix
 %   p = parameter struct: 
-%       .g = [scalar] (m/s/s) acceleration due to gravity
-%       .rho = [scalar] (kg/m^3) air density
-%       .m = [scalar] (kg) total quadcopter mass 
-%       .I = [3x3] (kg-m^2) inertia matrix kg-m^2]
-%       .cg = [1,3] (m) center-of-gravity location in body coords.
-%       .propulsion(i) = [struct] with fields
+%       .inertial = [struct] with fields:
+%           .m = [scalar] (kg) aircraft total mass 
+%           .cg = [1,3] (m) center-of-gravity location in body coords.
+%           .I = [3x3] (kg-m^2) inertia matrix kg-m^2]
+%       .propulsion(i) = [struct] propulsion parameter struct with fields
 %           .thrustAxis = [3x1] (unit vector) in body coordinates
-%           .thrustLocation = [3x1] (m) XYZ in body coordinates.
+%           .thrustlocation = [3x1] (m) XYZ in body coordinates.
 %           .isSpinDirectionCCW = [bool] if true, propeller spin direction 
 %                                    is counterclockwise around thrust axis.
-%           .C_t = [scalar] () thrust coefficient, see https://web.mit.edu/16.unified/www/FALL/thermodynamics/notes/node86.html
+%           .C_t = [scalar] () thrust coefficient see https://web.mit.edu/16.unified/www/FALL/thermodynamics/notes/node86.html
 %           .C_q = [scalar] () torque coefficient
 %           .maxRPM = [scalar] (RPM) maximum propeller RPM 
 %           .maxTorque = [scalar] (Nm) maximum propeller torque
-%           .d_prop = [scalar] (m) propeller diameter
+%           .d_prop = [scalar] (m) propeller diameter 
+%       .aero = [struct] with fields:
+%           .area = [m^2] aerodynamic reference area
+%           .mac = [m] mean aerodynamic chord
+%           .LUT = aerodynamic coefficient lookup table (see
+%                   readme_aeroModel for details)
+%       .environ = [struct] with fields:
+%           .g = [scalar] (m/s/s) acceleration due to gravity
+%           .rho = [scalar] (kg/m^3) air density
 %
 % OUTPUTS:
 %   dz = [12, n] = [dx; dy; dz; da; db; dg; ddx; ddy; ddz; dda; ddb; ddg] = derivative of state matrix

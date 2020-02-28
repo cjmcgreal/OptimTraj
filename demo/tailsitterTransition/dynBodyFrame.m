@@ -45,12 +45,12 @@ function [out] = dynBodyFrame(z_body, u, p)
 % Written by Conrad McGreal 2020/01/27 
 
 %% Unpack input state
-att = z_body(1:3,:);    % aircraft attitude
+eul = z_body(1:3,:);    % aircraft attitude
 linVel = z_body(4:6,:); % linear world velocity
 omega = z_body(7:9,:);  % attitude rates
 
-
 %% Aero forces and moments
+    
 % coordinate transforms to get alpha and V_inf
 
 % calculate aerodynamic forces & moments for all aero links (of p.aero)
