@@ -35,7 +35,7 @@ n_time = 10 ;
 n_motors = numel(p.propulsion); 
 
 z = zeros(12,n_time) ; 
-(pi/2)-deg2rad(5)
+% (pi/2)-deg2rad(5)
 z(9,:) = 10*ones(1,n_time) ; 
 u = ones(n_motors,n_time) ; 
 
