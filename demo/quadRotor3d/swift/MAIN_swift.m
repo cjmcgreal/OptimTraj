@@ -14,8 +14,8 @@ p.g = -9.81 ; % World Coords is XYZ = [East, North, Up], i.e. gravity is a negat
 p.rho = 1.225 ; % air density during flight (kg/m^3) 
 
 % Inertial params
-p.m = 5 ; 
-p.I = [0.625 0 0; 0 0.625 0; 0 0 1.25] ; % inertia tensor coords: 
+p.m = 20 ; 
+p.I = [10 0 0; 0 1 0; 0 0 10] ; % inertia tensor coords: 
 p.cg = [0 0 0] ; % (m) location of center of gravity
 
 % Load Propulsion Model
@@ -74,7 +74,7 @@ ddq = soln(end).grid.state(3,:);
 u = soln(end).grid.control ;
 
 % Plot the solution:
-plot_quadRotor3d(soln)
+plotQuadRotor3d(soln)
 
 
 
