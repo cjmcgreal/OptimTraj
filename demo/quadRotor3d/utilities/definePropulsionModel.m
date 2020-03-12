@@ -46,6 +46,7 @@ for i=1:size(p.thrustLocations,1)
     propulsionModel(i).isSpinDirectionCCW = p.isSpinDirectionCCW(i,:) ; 
     propulsionModel(i).maxRPM = p.maxRPM(i) ; 
     propulsionModel(i).maxTorque = p.maxTorque(i) ; 
+    propulsionModel(i).maxThrust = p.maxThrust(i) ;
     propulsionModel(i).d_prop = p.d_prop(i) ; 
 
     % compute coefficients.
