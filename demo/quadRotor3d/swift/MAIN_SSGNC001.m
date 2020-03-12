@@ -14,13 +14,14 @@ p.g = -9.81 ; % World Coords is XYZ = [East, North, Up], i.e. gravity is a negat
 p.rho = 1.225 ; % air density during flight (kg/m^3) 
 
 % Inertial params
-p.m = 15 ; 
-p.I = [1 0 0; 0 1 0; 0 0 1] ; % inertia tensor coords: 
+p.m = 19.6 ; 
+p.I = [11.19 0 0; 0 1 0; 0 0 10.415] ; % inertia tensor coords: 
 p.cg = [0 0 0] ; % (m) location of center of gravity
 
 % Load Propulsion Model
-propulsionModelName = 'PropulsionModelSwift021_SS.mat' ; 
+propulsionModelName = 'PropulsionModelSwift021_SN018.mat' ; 
 load(propulsionModelName)
+showPropulsionModel(PropulsionModelSwift021); 
 [p.propulsion] = PropulsionModelSwift021; 
 
 % Trajectory Parameters:
