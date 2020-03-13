@@ -20,19 +20,27 @@ R = zeros(3,3,size(eul,1)) ;
 
 for i=1:size(eul,1) 
     theta_x = eul(i,1) ; 
+    cx = cos(theta_x) ; 
+    sx = sin(theta_x) ; 
+    
     theta_y = eul(i,2) ; 
-    theta_z = eul(i,3) ; 
+    cy = cos(theta_y) ; 
+    sy = sin(theta_y) ; 
+    
+    theta_z = eul(i,3) ;
+    cz = cos(theta_z) ; 
+    sz = sin(theta_z) ; 
 
     X = [1 0 0
-        0 cos(theta_x) -sin(theta_x)
-        0 sin(theta_x) cos(theta_x)];
+        0 cx -sx
+        0 sx cx];
 
-    Y = [cos(theta_y) 0 sin(theta_y)
+    Y = [cy 0 sy
         0 1 0
-        -sin(theta_y) 0 cos(theta_y)];
+        -sy 0 cy];
 
-    Z = [cos(theta_z) -sin(theta_z) 0
-        sin(theta_z) cos(theta_z) 0
+    Z = [cz -sz 0
+        sz cz 0
         0 0 1];
 
     R(:,:,i) = Z*Y*X;
