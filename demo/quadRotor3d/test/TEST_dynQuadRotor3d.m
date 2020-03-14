@@ -30,15 +30,17 @@ qRP.isSpinDirectionCCW = [1; 0; 1; 0] ; % bool to reverse motor spin direction a
 % Call function that creates the propulsion plant model
 [p.propulsion] = definePropulsionModel(qRP); clear variable qRP ;
 
-% Throttle = 0 %
+%% Throttle = 0 %
 disp('Test 0 - 0% throttle')
-[ds] = dynQuadRotor3d(s, u, p) ; 
+s = zeros(12,1) ;
+u = zeros(4,1) ; 
+[ds] = dynQuadRotor3d(s, u, p) 
 
 %% Single timestep - full throttle
 disp('Test 1 - 100% throttle')
 s = zeros(12,1) ;
 u = ones(4,1) ; 
-[ds] = dynQuadRotor3d(s, u, p) ;
+[ds] = dynQuadRotor3d(s, u, p) 
 
 %% multiple timesteps
 disp('Test 2 - 0% throttle')
